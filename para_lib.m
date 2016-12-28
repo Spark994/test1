@@ -2,6 +2,8 @@
 %	Parameter I/O handling in matlab
 %
 function lib = para_lib();
+	global para;
+	if not( exist( para ) ); para = []; end;
 	lib.para_add = @para_add;
 	lib.para_val = @para_val;
 	lib.load_pars = @load_pars;
@@ -9,7 +11,8 @@ function lib = para_lib();
 	lib.print_pars = @print_pars;
 return
 %==============================================
-function [ para, err ] = load_pars( para, fname )
+function [  err ] = load_pars( fname )
+	global para;
     err = 0;
     update_file = fopen(fname , 'r');
     if update_file == -1;  	err = 1;   	return;    end;
@@ -40,7 +43,8 @@ function [ para, err ] = load_pars( para, fname )
 	fclose(update_file);
 return
 %==============================================
-function print_pars( para )
+function print_pars()
+	global para;
 	par_N = length(para);
 	for i = 1:par_N
     	switch para(i).type
@@ -58,8 +62,9 @@ function print_pars( para )
 	end
 return
 %==============================================
-function save_pars( para, fname )
-    fid = fopen( fname ,'w');
+function save_pars( fname )
+  	global para;
+  fid = fopen( fname ,'w');
     par_N = length(para);
     for i = 1:par_N
         switch para(i).type
@@ -78,7 +83,8 @@ function save_pars( para, fname )
     fclose(fid);
 return
 %==============================================
-function para = para_add( val, name, comment, type, para )
+function para_add( val, name, comment, type)
+	global para;
 	par_N = length( para );
 	N = par_N+1;
 	para( N ).name = name;
@@ -88,6 +94,7 @@ function para = para_add( val, name, comment, type, para )
 return
 %==============================================
 function val = para_val( para, name );
+	global para;
 	val = NaN;
 	par_N = length(para);
 	for i = 1:par_N;
